@@ -2,10 +2,17 @@ from rest_framework import serializers
 from .models import Task
 
 class TaskSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
     class Meta:
         model = Task
-        fields = ['id', 'title', 'description', 'due_date', 'priority', 'status', 'created_at', 'completed_at']
-        read_only_fields = ['id', 'created_at', 'completed_at']
+        fields = ['id', 'title', 'description', 'due_date', 'priority', 'status', 'created_at', 'completed_at', 'owner']
+        read_only_fields = ['id', 'created_at', 'completed_at', 'owner']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['task_url'] = f"/api/tasks/{instance.id}/"
+        return representation
 
 
 from django.contrib.auth.models import User

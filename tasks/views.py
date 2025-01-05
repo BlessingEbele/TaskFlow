@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Task
@@ -8,6 +8,21 @@ from .serializers import TaskSerializer
 from django.utils import timezone
 
 
+from rest_framework import permissions, viewsets, status
+from .models import Task
+from .serializers import TaskSerializer
+from .permissions import IsOwner
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Task.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class TaskListCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -23,6 +38,13 @@ class TaskListCreateView(APIView):
             serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, *args, **kwargs):
+        task = self.get_object()
+        if task.status == 'completed':
+            return Response({'detail': 'Cannot edit a completed task.'}, status=status.HTTP_400_BAD_REQUEST)
+        return super().update(request, *args, **kwargs)
+
 
 class TaskDetailView(APIView):
     permission_classes = [IsAuthenticated]
@@ -83,6 +105,14 @@ class UserListAPIView(ListAPIView):
     permission_classes = [IsAdminUser]
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+from rest_framework import viewsets
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]  
 
 
 from rest_framework.views import APIView
