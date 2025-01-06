@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import TaskListCreateView, TaskDetailView, TaskMarkCompleteView, TaskMarkIncompleteView
-from .views import  UserListAPIView, register_user 
+from .views import  UserListAPIView, UserViewSet
 from . import views
 from rest_framework.authtoken.views import obtain_auth_token
 from .views import CustomAuthToken
@@ -27,6 +27,8 @@ urlpatterns = [
     # path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # path('swagger.json/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('tasks/', TaskListCreateView.as_view(), name='task-list-create'),
     path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
     path('tasks/<int:pk>/mark-complete/', TaskMarkCompleteView.as_view(), name='task-mark-complete'),
@@ -36,13 +38,11 @@ urlpatterns = [
     # path('tasks/<int:pk>/', TaskDetailAPIView.as_view(), name='task-detail'),
     path('users/', UserListAPIView.as_view(), name='user-list'),  # Optional for superuser testing
     path('user/<int:pk>/', UserListAPIView.as_view(), name='specific-user'),
-    path('register/', views.register_user, name='register-user'),
-    path('login/', views.login_user, name='login'),
-    path('logout/', views.logout_user, name='logout'),
-    path('api/token-auth/', obtain_auth_token, name='token_auth'),
-    path('api/token-auth/', CustomAuthToken.as_view(), name='token_auth'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path('register/', views.register_user, name='register-user'),
+    # path('login/', views.login_user, name='login'),
+    # path('logout/', views.logout_user, name='logout'),
+    # path('api/token-auth/', obtain_auth_token, name='token_auth'),
+    # path('api/token-auth/', CustomAuthToken.as_view(), name='token_auth'),
 ]
 
 from rest_framework.routers import DefaultRouter
