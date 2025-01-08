@@ -1,13 +1,10 @@
 from django.urls import path, include
 from .views import TaskListCreateView, TaskDetailView, TaskMarkCompleteView, TaskMarkIncompleteView
-from .views import  UserListAPIView#, UserViewSet
+from .views import  UserListAPIView, UserViewSet
 from . import views
 from rest_framework.authtoken.views import obtain_auth_token
 from .views import CustomAuthToken
-
-
-from django.contrib.auth.views import LoginView, LogoutView
-
+from .views import CustomTokenObtainPairView
 
 #from .views import TaskListCreateAPIView, TaskDetailAPIView,
 from rest_framework import permissions
@@ -33,7 +30,7 @@ urlpatterns = [
 
     path('api/users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/tasks/', TaskListCreateView.as_view(), name='task-list-create'),
+    path('tasks/', TaskListCreateView.as_view(), name='task-list-create'),
     path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
     path('tasks/<int:pk>/mark-complete/', TaskMarkCompleteView.as_view(), name='task-mark-complete'),
     path('tasks/<int:pk>/mark-incomplete/', TaskMarkIncompleteView.as_view(), name='task-mark-incomplete'),
@@ -45,13 +42,8 @@ urlpatterns = [
     # path('register/', views.register_user, name='register-user'),
     # path('login/', views.login_user, name='login'),
     # path('logout/', views.logout_user, name='logout'),
-    path('login/', LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
-    # path('register/', register_view, name='register'),
-    #path('register/', views.register_user, name='register'),  
     path('api/token-auth/', obtain_auth_token, name='token_auth'),
     path('api/token-auth/', CustomAuthToken.as_view(), name='token_auth'),
-    #path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]
 
 from rest_framework.routers import DefaultRouter
@@ -59,7 +51,7 @@ from .views import TaskViewSet, UserViewSet
 
 router = DefaultRouter()
 router.register(r'tasks', TaskViewSet, basename='task')
-router.register(r'users', UserViewSet,basename='user')# 
+router.register(r'users', UserViewSet, basename='user')
 
 
 urlpatterns = [

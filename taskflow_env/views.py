@@ -18,6 +18,7 @@ from .permissions import IsOwner
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
@@ -27,6 +28,7 @@ class TaskViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 class TaskListCreateView(APIView):
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]#
 
     def get(self, request):
@@ -49,6 +51,7 @@ class TaskListCreateView(APIView):
 
 
 class TaskDetailView(APIView):
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):

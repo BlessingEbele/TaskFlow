@@ -71,3 +71,46 @@ from django.test import TestCase
 #         self.assertEqual(response.status_code, status.HTTP_200_OK)
 #         self.task.refresh_from_db()
 #         self.assertEqual(self.task.status, "pending")
+
+
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from django.urls import reverse
+
+class AuthEndpointsTestCase(TestCase):
+    def setUp(self):
+        # Create a test user
+        self.username = "testuser"
+        self.password = "testpassword"
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.client = Client()
+
+    def test_login_endpoint(self):
+        # Send a POST request to login
+        response = self.client.post(reverse('login'), {
+            'username': self.username,
+            'password': self.password,
+        })
+        self.assertEqual(response.status_code, 200)
+
+    
+    def test_logout_endpoint(self):
+        # Log in first
+        self.client.login(username=self.username, password=self.password)
+
+        # Send a GET request to logout
+    def test_logout_endpoint(self):
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('logout'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_register_endpoint(self):
+        # Send a POST request to register
+        response = self.client.post(reverse('register'), {
+            'username': 'newuser',
+            'password1': 'securepassword',
+            'password2': 'securepassword',
+        })
+        self.assertEqual(response.status_code, 302)  # Redirect after successful registration
+        self.assertTrue(User.objects.filter(username='newuser').exists())
+
