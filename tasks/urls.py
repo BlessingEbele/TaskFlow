@@ -31,6 +31,7 @@ urlpatterns = [
     # path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # path('swagger.json/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
 
+    path('api/auth/', obtain_auth_token),
     path('api/users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/tasks/', TaskListCreateView.as_view(), name='task-list-create'),
@@ -65,3 +66,14 @@ router.register(r'users', UserViewSet,basename='user')#
 urlpatterns = [
     path('', include(router.urls)),
 ]
+
+from django.contrib.auth.views import LoginView, LogoutView
+
+urlpatterns += [
+    path('api/auth/login/', LoginView.as_view(), name='login'),
+    path('api/auth/logout/', LogoutView.as_view(), name='logout'),
+]
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,3 +1,12 @@
+const response = await fetch('http://127.0.0.1:8000/api/auth/', {
+    method: 'GET',
+    headers: {
+        'Authorization': `Basic ${btoa(`${username}:${password}`)}`
+    }
+})
+
+
+
 function saveCredentials(username, password) {
     localStorage.setItem('auth', btoa(`${username}:${password}`));
 }
