@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -8,9 +7,6 @@ from .models import Task
 from .serializers import TaskSerializer
 from django.utils import timezone
 from rest_framework.authentication import TokenAuthentication
-
-
-
 from rest_framework import permissions, viewsets, status
 from .serializers import TaskSerializer
 from .permissions import IsOwner
@@ -109,13 +105,6 @@ class UserListAPIView(ListAPIView):
     serializer_class = UserSerializer
 
 
-
-
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer 
-
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -178,109 +167,6 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({"message": "Logout successful."}, status=status.HTTP_200_OK)
 
 
-# @api_view(['POST'])
-# def register_user(request):
-#     """
-#     Endpoint to register a new user.
-#     """
-#     username = request.data.get('username')
-#     email = request.data.get('email')
-#     password = request.data.get('password')
-
-#     if not username or not password:
-#         return Response({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-#     if User.objects.filter(username=username).exists():
-#         return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
-
-#     user = User.objects.create_user(username=username, email=email, password=password)
-#     return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
-
-# # @csrf_exempt
-# @api_view(['POST'])
-# def register_user(request):
-#     """
-#     Registers a new user.
-#     """
-#     try:
-#         data = json.loads(request.body)
-#         username = data.get('username')
-#         password = data.get('password')
-#         email = data.get('email', '')
-
-#         if not username or not password:
-#             return JsonResponse({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-#         if User.objects.filter(username=username).exists():
-#             return JsonResponse({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
-
-#         user = User.objects.create_user(username=username, password=password, email=email)
-#         user.save()
-
-#         return JsonResponse({"message": "User registered successfully."}, status=status.HTTP_201_CREATED)
-
-#     except Exception as e:
-#         return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-# @api_view(['POST'])
-# def login_user(request):
-#     """
-#     Endpoint to log in a user.
-#     """
-#     username = request.data.get('username')
-#     password = request.data.get('password')
-
-#     if not username or not password:
-#         return Response({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-#     user = authenticate(username=username, password=password)
-#     if user is not None:
-#         return Response({"message": "Login successful!"}, status=status.HTTP_200_OK)
-#     else:
-#         return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-# # @csrf_exempt
-# @api_view(['POST'])
-# def login_user(request):
-#     """
-#     Logs in an existing user.
-#     """
-#     try:
-#         data = json.loads(request.body)
-#         username = data.get('username')
-#         password = data.get('password')
-
-#         if not username or not password:
-#             return JsonResponse({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
-
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             return JsonResponse({"message": "Login successful."}, status=status.HTTP_200_OK)
-#         else:
-#             return JsonResponse({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
-
-#     except Exception as e:
-#         return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
-# # @csrf_exempt
-# @api_view(['POST'])
-# def logout_user(request):
-#     """
-#     Logs out the current user.
-#     """
-#     try:
-#         logout(request)
-#         return JsonResponse({"message": "Logout successful."}, status=status.HTTP_200_OK)
-#     except Exception as e:
-#         return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -309,25 +195,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         except (InvalidToken, TokenError) as e:
             return Response({"error": str(e)}, status=400)
 
-
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from .models import Task
-# from .serializers import TaskSerializer
-
-# class TaskListCreateView(APIView):
-#     def get(self, request):
-#         tasks = Task.objects.filter(owner=request.user)
-#         serializer = TaskSerializer(tasks, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-#     def post(self, request):
-#         serializer = TaskSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save(owner=request.user)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.response import Response
