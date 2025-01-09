@@ -38,6 +38,9 @@ urlpatterns = [
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns += [
+
+    path('api/static/login.html/', LoginView.as_view(), name='login'),
+    path('api/static/logout.html/', LogoutView.as_view(), name='logout'),
     path('api/auth/login/', LoginView.as_view(), name='login'),
     path('api/auth/logout/', LogoutView.as_view(), name='logout'),
 ]
